@@ -36,7 +36,7 @@ A single-page product discovery interface built with **Vite + React + TypeScript
 
 The UI follows the **"Organic Quiet Luxury"** design system — an editorial, gallery-style aesthetic pairing *Bodoni Moda* headlines with *Hanken Grotesk* body text over a warm sand/linen/clay palette.
 
-![Discovery collection](../stitch_responsive_product_discovery_interface/populated_product_discovery_orla_vine/screen.png)
+**Live demo:** [product-discovery-bay.vercel.app](https://product-discovery-bay.vercel.app/)
 
 ## Features
 

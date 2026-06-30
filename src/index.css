@@ -1087,10 +1087,18 @@ input {
   }
   .modal {
     grid-template-columns: 1fr;
+    /* Stack the image over the details and let the details fill the rest,
+       so the body can scroll inside the capped modal height. */
+    grid-template-rows: auto minmax(0, 1fr);
     max-height: calc(100vh - 32px);
   }
   .modal__media {
     height: 240px;
+  }
+  .modal__body {
+    /* min-height:0 lets this grid row shrink below its content so its own
+       overflow-y:auto engages instead of the content overflowing the modal. */
+    min-height: 0;
   }
 }
 @media (max-width: 560px) {

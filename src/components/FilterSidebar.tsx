@@ -28,29 +28,35 @@ function CheckList({
   selected,
   placeholder,
   scroll,
+  searchable = true,
   onToggle,
 }: {
   facets: Facet[]
   selected: string[]
   placeholder: string
   scroll?: boolean
+  searchable?: boolean
   onToggle: (value: string) => void
 }) {
   const [query, setQuery] = useState('')
-  const filtered = facets.filter((f) =>
-    f.value.toLowerCase().includes(query.trim().toLowerCase()),
-  )
+  const filtered = searchable
+    ? facets.filter((f) =>
+        f.value.toLowerCase().includes(query.trim().toLowerCase()),
+      )
+    : facets
   return (
     <>
-      <div className="facet-search">
-        <Icon name="search" />
-        <input
-          type="text"
-          placeholder={placeholder}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-      </div>
+      {searchable && (
+        <div className="facet-search">
+          <Icon name="search" />
+          <input
+            type="text"
+            placeholder={placeholder}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </div>
+      )}
       {filtered.length === 0 ? (
         <p className="facet-empty">No matches</p>
       ) : (
@@ -121,6 +127,7 @@ export function FilterSidebar({
             facets={categories}
             selected={filters.categories}
             placeholder="Search categories…"
+            searchable={false}
             onToggle={(v) => toggle('categories', v)}
           />
         </Collapsible>

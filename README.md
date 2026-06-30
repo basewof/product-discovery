@@ -1,3 +1,28 @@
+### Project Approach and Process
+
+To ensure I was working with the most current and accurate information, I began by researching the concept of a **product discovery page**. This is a standard step I take on every project, even when I am already familiar with the topic, as best practices and implementations can evolve over time.
+
+Through this research, I confirmed that while a product discovery page shares similarities with a product search page, the two serve distinct purposes. A discovery page focuses on helping users explore and find relevant products through curated browsing, recommendations, and intuitive navigation, rather than direct keyword-based searching.
+
+#### Design Research and Inspiration
+I gathered design inspiration from platforms such as Dribbble, Pinterest, and drip.com. My initial searches for “product discovery page” yielded limited useful results. Thanks to the earlier research, I refined my query to “product search page,” which provided more relevant and high-quality design examples. From these, I selected the design that most closely aligned with a product discovery experience and adapted it with necessary modifications to better fit the project requirements.
+
+#### Data Analysis
+Next, I thoroughly analyzed the JSON product dataset. The review revealed that all products follow a consistent, standardized structure. This uniformity eliminated the need for special handling or custom scenarios for individual products. Additionally, the image heights across most products were reasonably similar, removing the requirement for complex layout adjustments to accommodate disproportionate dimensions.
+
+This analysis allowed me to define a clear, reusable prototype for product display and develop a generic, scalable approach for rendering any product in the collection.
+
+I also identified certain product attributes (such as tags) that have high cardinality. Displaying all options for these attributes directly on the page would make it excessively long and overwhelming. I documented these attributes for special implementation, such as collapsible sections, dropdowns, or advanced filtering controls.
+
+#### UI Design and Development
+I designed the user interface using Google Stitch, following the detailed specifications and requirements defined earlier.
+
+For frontend development, I leveraged Claude to generate the code. I provided it with the complete product dataset, the UI design, technical specifications, and clear guidelines regarding constraints and areas of flexibility.
+
+
+
+
+
 # Orla &amp; Vine — Product Discovery
 
 A single-page product discovery interface built with **Vite + React + TypeScript**. It lets shoppers search, filter, sort, and page through a catalogue of 4,000 products, with a quick-look detail modal for each item.
@@ -13,7 +38,8 @@ The UI follows the **"Organic Quiet Luxury"** design system — an editorial, ga
 - Multi-term matching (every word must match), with a clear button
 
 ### Filters (collapsible sidebar)
-- **Category** &amp; **Brand** — searchable checkbox lists showing a live result count per option
+- **Category** — checkbox list with a live result count per option
+- **Brand** — searchable checkbox list with a live result count per option
 - **Tags** — searchable, multi-select pill cloud (AND logic)
 - **Price range** — `min`/`max` number inputs kept in sync with a slider
 - **Rating** — "X stars &amp; up" radio options

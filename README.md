@@ -2,7 +2,7 @@
 
 To ensure I was working with the most current and accurate information, I began by researching the concept of a **product discovery page**. This is a standard step I take on every project, even when I am already familiar with the topic, as best practices and implementations can evolve over time.
 
-Through this research, I confirmed that while a product discovery page shares similarities with a product search page, the two serve distinct purposes. A discovery page focuses on helping users explore and find relevant products through curated browsing, recommendations, and intuitive navigation, rather than direct keyword-based searching.
+Initially I was going to build a product search page, but through this research, I confirmed that while a product discovery page shares similarities with a product search page, the two serve distinct purposes. A discovery page focuses on helping users explore and find relevant products through curated browsing, recommendations, and intuitive navigation, rather than direct keyword-based searching.
 
 #### Design Research and Inspiration
 I gathered design inspiration from platforms such as Dribbble, Pinterest, and drip.com. My initial searches for “product discovery page” yielded limited useful results. Thanks to the earlier research, I refined my query to “product search page,” which provided more relevant and high-quality design examples. From these, I selected the design that most closely aligned with a product discovery experience and adapted it with necessary modifications to better fit the project requirements.

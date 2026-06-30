@@ -1,25 +1,29 @@
-### Project Approach and Process
+**Live website:** [product-discovery-bay.vercel.app](https://product-discovery-bay.vercel.app/)
+
+**GitHub repository:** [github.com/basewof/product-discovery](https://github.com/basewof/product-discovery)
+
+# Project Approach and Process
 
 To ensure I was working with the most current and accurate information, I began by researching the concept of a **product discovery page**. This is a standard step I take on every project, even when I am already familiar with the topic, as best practices and implementations can evolve over time.
 
-Initially I was going to build a product search page, but through this research, I confirmed that while a product discovery page shares similarities with a product search page, the two serve distinct purposes. A discovery page focuses on helping users explore and find relevant products through curated browsing, recommendations, and intuitive navigation, rather than direct keyword-based searching.
+Initially I was going to build a product search page, but through this research, I confirmed that while a product discovery page shares similarities with a product search page, the two serve distinct purposes. A discovery page focuses on helping users explore and find relevant products through curated browsing, recommendations, and intuitive navigation, rather than direct keyword-based searching. After my research I decided to the page with both features of a **product search page** and a **product discovery page**.
 
-#### Design Research and Inspiration
+## Design Research and Inspiration
 I gathered design inspiration from platforms such as Dribbble, Pinterest, and drip.com. My initial searches for “product discovery page” yielded limited useful results. Thanks to the earlier research, I refined my query to “product search page,” which provided more relevant and high-quality design examples. From these, I selected the design that most closely aligned with a product discovery experience and adapted it with necessary modifications to better fit the project requirements.
 
-#### Data Analysis
+## Data Analysis
 Next, I thoroughly analyzed the JSON product dataset. The review revealed that all products follow a consistent, standardized structure. This uniformity eliminated the need for special handling or custom scenarios for individual products. Additionally, the image heights across most products were reasonably similar, removing the requirement for complex layout adjustments to accommodate disproportionate dimensions.
 
 This analysis allowed me to define a clear, reusable prototype for product display and develop a generic, scalable approach for rendering any product in the collection.
 
 I also identified certain product attributes (such as tags) that have high cardinality. Displaying all options for these attributes directly on the page would make it excessively long and overwhelming. I documented these attributes for special implementation, such as collapsible sections, dropdowns, or advanced filtering controls.
 
-#### UI Design and Development
+## UI Design and Development
 I designed the user interface using Google Stitch, following the detailed specifications and requirements defined earlier.
 
 For frontend development, I leveraged Claude to generate the code. I provided it with the complete product dataset, the UI design, technical specifications, and clear guidelines regarding constraints and areas of flexibility.
 
-#### Next Steps
+# Next Steps
 With the product discovery page now deployed, the following key steps are planned:
 - Perform comprehensive testing, including cross-browser compatibility, mobile responsiveness, accessibility, and performance audits using tools like Google Lighthouse.
 - Collect user feedback through testing sessions or surveys to identify usability improvements.
@@ -29,6 +33,9 @@ With the product discovery page now deployed, the following key steps are planne
 - Iterate on the page based on data and feedback to further refine the user experience.
 
 
+# The Trade off
+
+By leading with discovery, the page favours shoppers who are browsing for ideas over shoppers who know exactly what they want, so it shows a curated home before the results and puts more effort into curation than into advanced search — and I am watching how users respond to this design to see whether they would prefer something different.
 
 # Orla &amp; Vine — Product Discovery
 

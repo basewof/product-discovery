@@ -6,7 +6,9 @@ import { FilterSidebar, type Facet } from './components/FilterSidebar'
 import { ProductCard } from './components/ProductCard'
 import { ProductModal } from './components/ProductModal'
 import { Pagination } from './components/Pagination'
+import { DiscoveryView } from './components/DiscoveryView'
 import { Icon } from './components/Icon'
+import { relatedProducts } from './discovery'
 
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: 'featured', label: 'Featured' },
@@ -45,6 +47,9 @@ export default function App() {
   const [pageSize, setPageSize] = useState(24)
   const [active, setActive] = useState<Product | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  // When true, the user has chosen to browse the full results listing
+  // (via a sort change or a rail's "View all") rather than the curated home.
+  const [browseAll, setBrowseAll] = useState(false)
 
   // Facets / price bounds are derived once from the full dataset.
   const categories = useMemo(
@@ -199,7 +204,30 @@ export default function App() {
     (filters.minRating ? 1 : 0) +
     (filters.inStockOnly ? 1 : 0)
 
-  const clearAll = () => setFilters(EMPTY_FILTERS)
+  // Returning to the curated home means dropping every filter *and* the
+  // explicit "browse all" intent.
+  const resetToDiscovery = () => {
+    setFilters(EMPTY_FILTERS)
+    setBrowseAll(false)
+  }
+  const clearAll = resetToDiscovery
+
+  const hasQuery = filters.search.trim().length > 0
+  // Discovery (curated) home shows until the user searches, filters, or
+  // explicitly asks to browse the full listing.
+  const inResults = hasQuery || activeCount > 0 || browseAll
+
+  const selectCategory = (category: string) =>
+    patchFilters({ categories: [category] })
+  const viewAll = (nextSort: SortKey) => {
+    setSort(nextSort)
+    setBrowseAll(true)
+  }
+
+  const related = useMemo(
+    () => (active ? relatedProducts(active, products) : []),
+    [active, products],
+  )
 
   return (
     <div className="app">
@@ -220,9 +248,19 @@ export default function App() {
 
         <main className="content">
           <div className="toolbar">
+            {inResults && (
+              <button className="back-link" onClick={resetToDiscovery}>
+                <Icon name="chevron_left" />
+                Back to Discovery
+              </button>
+            )}
             <div className="toolbar__title">
-              <h1>The Discovery Collection</h1>
-              <p>Curated objects for considered living.</p>
+              <h1>{inResults ? 'Browse the Collection' : 'Discover Orla & Vine'}</h1>
+              <p>
+                {inResults
+                  ? 'Refine with search, filters and sorting.'
+                  : 'Curated objects for considered living.'}
+              </p>
             </div>
 
             <div className="toolbar__row">
@@ -245,53 +283,51 @@ export default function App() {
                 )}
               </div>
 
-              <div className="sort">
-                <label htmlFor="sort">Sort</label>
-                <select
-                  id="sort"
-                  value={sort}
-                  onChange={(e) => setSort(e.target.value as SortKey)}
-                >
-                  {SORT_OPTIONS.map((o) => (
-                    <option key={o.value} value={o.value}>
-                      {o.label}
-                    </option>
-                  ))}
-                </select>
-                <Icon name="expand_more" className="caret" />
-              </div>
-            </div>
-
-            <div className="meta-row">
-              <span className="result-count">
-                {loading ? (
-                  'Loading collection…'
-                ) : (
-                  <>
-                    <strong>{sorted.length.toLocaleString()}</strong>{' '}
-                    {sorted.length === 1 ? 'piece' : 'pieces'}
-                  </>
-                )}
-              </span>
-              {chips.length > 0 && (
-                <div className="active-filters">
-                  {chips.map((chip) => (
-                    <span className="pill" key={chip.key}>
-                      {chip.label}
-                      <button
-                        onClick={chip.clear}
-                        aria-label={`Remove ${chip.label}`}
-                      >
-                        <Icon name="close" />
-                      </button>
-                    </span>
-                  ))}
-                  <button className="clear-all" onClick={clearAll}>
-                    Clear all
-                  </button>
+              {inResults && (
+                <div className="sort">
+                  <label htmlFor="sort">Sort</label>
+                  <select
+                    id="sort"
+                    value={sort}
+                    onChange={(e) => setSort(e.target.value as SortKey)}
+                  >
+                    {SORT_OPTIONS.map((o) => (
+                      <option key={o.value} value={o.value}>
+                        {o.label}
+                      </option>
+                    ))}
+                  </select>
+                  <Icon name="expand_more" className="caret" />
                 </div>
               )}
             </div>
+
+            {inResults && (
+              <div className="meta-row">
+                <span className="result-count">
+                  <strong>{sorted.length.toLocaleString()}</strong>{' '}
+                  {sorted.length === 1 ? 'piece' : 'pieces'}
+                </span>
+                {chips.length > 0 && (
+                  <div className="active-filters">
+                    {chips.map((chip) => (
+                      <span className="pill" key={chip.key}>
+                        {chip.label}
+                        <button
+                          onClick={chip.clear}
+                          aria-label={`Remove ${chip.label}`}
+                        >
+                          <Icon name="close" />
+                        </button>
+                      </span>
+                    ))}
+                    <button className="clear-all" onClick={clearAll}>
+                      Clear all
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {error ? (
@@ -311,6 +347,13 @@ export default function App() {
                 </div>
               ))}
             </div>
+          ) : !inResults ? (
+            <DiscoveryView
+              products={products}
+              onOpen={setActive}
+              onSelectCategory={selectCategory}
+              onViewAll={viewAll}
+            />
           ) : pageItems.length === 0 ? (
             <div className="state">
               <Icon name="search_off" />
@@ -339,7 +382,12 @@ export default function App() {
         </main>
       </div>
 
-      <ProductModal product={active} onClose={() => setActive(null)} />
+      <ProductModal
+        product={active}
+        related={related}
+        onClose={() => setActive(null)}
+        onSelect={setActive}
+      />
     </div>
   )
 }

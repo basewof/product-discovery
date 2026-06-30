@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import type { Product } from '../types'
 import { Icon } from './Icon'
 import { StarRating } from './StarRating'
@@ -6,10 +6,17 @@ import { formatPrice, formatDate } from '../format'
 
 interface ProductModalProps {
   product: Product | null
+  related: Product[]
   onClose: () => void
+  onSelect: (product: Product) => void
 }
 
-export function ProductModal({ product, onClose }: ProductModalProps) {
+export function ProductModal({
+  product,
+  related,
+  onClose,
+  onSelect,
+}: ProductModalProps) {
   useEffect(() => {
     if (!product) return
     const onKey = (e: KeyboardEvent) => {
@@ -22,6 +29,12 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
       document.body.style.overflow = ''
     }
   }, [product, onClose])
+
+  const bodyRef = useRef<HTMLDivElement>(null)
+  // When switching to a recommended product, scroll the panel back to the top.
+  useEffect(() => {
+    bodyRef.current?.scrollTo({ top: 0 })
+  }, [product?.id])
 
   if (!product) return null
 
@@ -40,7 +53,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
         <div className="modal__media">
           <img src={product.image} alt={product.title} />
         </div>
-        <div className="modal__body">
+        <div className="modal__body" ref={bodyRef}>
           <span className="modal__brand">{product.brand}</span>
           <h2 className="modal__title">{product.title}</h2>
           <div className="modal__price">{formatPrice(product.price)}</div>
@@ -97,6 +110,27 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
               Save to Wishlist
             </button>
           </div>
+
+          {related.length > 0 && (
+            <div className="modal__related">
+              <div className="modal__section-label">You May Also Like</div>
+              <div className="reco-grid">
+                {related.map((r) => (
+                  <button
+                    key={r.id}
+                    className="reco"
+                    onClick={() => onSelect(r)}
+                  >
+                    <span className="reco__media">
+                      <img src={r.image} alt={r.title} loading="lazy" />
+                    </span>
+                    <span className="reco__title">{r.title}</span>
+                    <span className="reco__price">{formatPrice(r.price)}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

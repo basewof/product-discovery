@@ -1,15 +1,11 @@
 import type { Product } from '../types'
 import { Icon } from './Icon'
 import { formatPrice } from '../format'
+import { isBestSeller } from '../discovery'
 
 interface ProductCardProps {
   product: Product
   onOpen: (product: Product) => void
-}
-
-/** Products with many reviews and a high rating get the "Best Seller" ribbon. */
-function isBestSeller(p: Product) {
-  return p.rating >= 4.5 && p.reviews >= 1000
 }
 
 export function ProductCard({ product, onOpen }: ProductCardProps) {

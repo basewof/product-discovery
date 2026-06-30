@@ -38,7 +38,15 @@ The UI follows the **"Organic Quiet Luxury"** design system — an editorial, ga
 
 **Live demo:** [product-discovery-bay.vercel.app](https://product-discovery-bay.vercel.app/)
 
+The page has two modes. By default it opens on a **curated discovery home** where the system proposes content. The moment the shopper searches, applies a filter, or chooses to browse a rail in full, it switches to a **results view** (the searchable, filterable, paginated grid). "Back to Discovery" returns to the curated home.
+
 ## Features
+
+### Discovery home (default)
+A system-curated landing experience shown when no search or filter is active:
+- **Editor's Pick hero** — spotlights the highest-ranked product
+- **Shop by Category** — image tiles per category (with piece counts) that jump straight into a filtered view
+- **Curated rails** — horizontally scrollable carousels for **Trending Now** (best sellers), **New Arrivals** (newest releases), and **Most Loved** (top rated). Each rail's **View all** opens the full results listing with the matching sort applied.
 
 ### Search
 - Full-text search across product **title, brand, category, tags, and description**
@@ -63,6 +71,7 @@ Compact numbered pager (`1 … 5 [6] 7 … 167`) with previous/next controls, a 
 ### Product cards &amp; detail modal
 - 3:4 "gallery" cards with brand, title, price, star rating, a **Best Seller** ribbon (high rating + high review count), and a **Sold Out** overlay
 - Clicking a card opens a detail modal (image, story, specs, tags, add-to-bag / wishlist) — dismissible via the ✕, the backdrop, or the `Esc` key
+- **"You May Also Like"** — content-based recommendations inside the modal, scored by shared tags, then category, then brand; clicking one swaps the modal to that product
 
 ## Tech stack
 
@@ -101,8 +110,9 @@ p-page/
 ├── public/
 │   └── products.json          # the 4,000-item product dataset (static asset)
 ├── src/
-│   ├── App.tsx                # state, filtering, sorting & pagination logic
+│   ├── App.tsx                # state, discovery/results mode, filtering, sorting & pagination
 │   ├── useProducts.ts         # fetch + normalise the dataset
+│   ├── discovery.ts           # curation logic: hero, rails, category tiles, recommendations
 │   ├── types.ts               # Product, Filters, SortKey types
 │   ├── format.ts              # price & date formatting helpers
 │   ├── index.css              # design system (tokens) + all component styles
@@ -110,8 +120,10 @@ p-page/
 │       ├── Header.tsx         # top navigation bar
 │       ├── FilterSidebar.tsx  # all filter facets
 │       ├── Collapsible.tsx    # animated expand/collapse section
-│       ├── ProductCard.tsx    # grid card
-│       ├── ProductModal.tsx   # quick-look detail dialog
+│       ├── DiscoveryView.tsx  # curated home: hero + category tiles + rails
+│       ├── ProductRail.tsx    # horizontally scrollable product carousel
+│       ├── ProductCard.tsx    # grid / rail card
+│       ├── ProductModal.tsx   # quick-look detail dialog + recommendations
 │       ├── Pagination.tsx     # numbered pager + page-size select
 │       ├── StarRating.tsx     # 5-star display (half-star precision)
 │       └── Icon.tsx           # Material Symbols wrapper
@@ -120,7 +132,15 @@ p-page/
 
 ## How it works
 
-State lives in `App.tsx` and the derived views are memoised in a clear pipeline:
+### Discovery vs. results mode
+
+`App.tsx` shows the curated **discovery home** until the shopper expresses intent — a search term, an active filter, or an explicit "browse all" (changing the sort or tapping a rail's _View all_). Any of those flips the page into **results mode**; **Back to Discovery** clears them and returns to the curated home.
+
+The discovery rails and recommendations are pure functions in `discovery.ts` (hero pick, trending, new arrivals, top rated, category tiles, and content-based related products), so the curation rules live in one place and are easy to tune.
+
+### Results pipeline
+
+In results mode the derived views are memoised in a clear pipeline:
 
 ```
 products ──filter──▶ filtered ──sort──▶ sorted ──slice──▶ current page
